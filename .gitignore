@@ -1,0 +1,5 @@
+
+.idea/misc.xml
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

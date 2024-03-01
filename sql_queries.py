@@ -69,6 +69,10 @@ def delete_later():
                                                              'cardhoarder': 'https://www.cardhoarder.com/cards/67469?affiliate_id=scryfall&ref=card-profile&utm_campaign=affiliate&utm_medium=card&utm_source=scryfall'}}]}
 
 
+def connect_to_database():
+    conn = sqlite3.connect('AllPrintings.sqlite')
+    return conn
+
 def get_card_info(set_code, collector_number):
     print(f"API REQUESTING {type(set_code), set_code, type(collector_number), collector_number}")
     url = "https://api.scryfall.com/cards/collection"
@@ -95,9 +99,6 @@ def get_card_info(set_code, collector_number):
         print("Error:", response.status_code)
         return None
 
-def connect_to_database():
-    conn = sqlite3.connect('AllPrintings.sqlite')
-    return conn
 
 
 def search_cards(conn, pattern):
