@@ -17,11 +17,11 @@ from tqdm import tqdm
 
 
 
-
-if os == 'Windows':
+print(os)
+if os.name == 'Windows':
     print("Hello Microsoft")
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-elif os == 'Linux':
+elif os.name == 'Linux':
     print("Potato")
 else:
     print("Unknown operating system")
