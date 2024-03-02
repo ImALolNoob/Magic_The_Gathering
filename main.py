@@ -17,10 +17,20 @@ from tqdm import tqdm
 
 
 
-try:
+
+if os == 'Windows':
+    print("Hello Microsoft")
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-except Exception:
-    pass
+elif os == 'Linux':
+    print("Potato")
+else:
+    print("Unknown operating system")
+    try:
+        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    except Exception:
+        pass
+
+
 start_time = time.time()
 # If you're on Windows, you will need to point pytesseract to the path
 # where you installed Tesseract
