@@ -13,11 +13,18 @@ import random
 from PIL import Image, ImageDraw
 import pytesseract
 import os
+from tqdm import tqdm
 
+
+
+try:
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+except Exception:
+    pass
 start_time = time.time()
 # If you're on Windows, you will need to point pytesseract to the path
 # where you installed Tesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 
 # Specify the directory containing images
 image_dir = 'images'
@@ -114,7 +121,7 @@ def image_search_bottom(filename):
 counter_succ = 0
 counter_fail = 0
 api_id = ""
-for filename in files:
+for filename in tqdm(files):
     if filename.endswith('.jpg') or filename.endswith('.png'):
         # text = image_check_full_image(filename)
         text = image_search_bottom(filename)
@@ -136,10 +143,10 @@ for filename in files:
                         #print("api_id")
                     except Exception:
                         api_id = False
-                    print(card_info)
+                    #print(card_info)
                     if api_id:
 
-                        print(f"API Id Requested: {api_id}")
+                        #print(f"API Id Requested: {api_id}")
                         UUID = search_cards_by_scryfall_id(con, api_id)[0]
                         print("AAAAAAA",UUID, filename)
                         if UUID+".jpg" == filename:
