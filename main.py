@@ -3,7 +3,7 @@ import sqlite3
 import time
 from pprint import pprint
 
-from sql_queries import connect_to_database, get_unique_set_codes, get_card_info
+from sql_queries import connect_to_database, get_unique_set_codes, get_card_info, select_card_identifiers
 from configs import *
 import cv2
 from colorama import Fore, Back, Style
@@ -107,7 +107,7 @@ def image_search_bottom(filename):
     roi = img.crop((roi_left, roi_top, roi_right, roi_bottom))
     text = pytesseract.image_to_string(roi)
     # print("-+-+-",Fore.LIGHTCYAN_EX, text,Fore.RESET)
-    #roi.show()
+    # roi.show()
     return text
 
 
@@ -121,15 +121,23 @@ for filename in files:
         present_setCode = check_words_in_string(unique_set_codes, text)
         # present_words = check_words_in_string(card_type_words, text)
         present_card_max_num = extract_info(text)
-        print(Fore.GREEN, text, Fore.RESET, "=====")
-        print(Fore.BLUE, present_setCode, Fore.CYAN, present_card_max_num, Fore.RESET)
+        print(Fore.GREEN, text, Fore.RESET)
+        # print(Fore.BLUE, present_setCode, Fore.CYAN, present_card_max_num, Fore.RESET)
         counter = counter + 1
         if len(present_card_max_num) > 0 and len(present_setCode) > 0:
             for cardnum in present_card_max_num:
                 for setcode in present_setCode:
                     # print("look at meeee", cardnum, setcode)
                     card_info = get_card_info(setcode, cardnum[0])
-                    print(card_info)
+
+                    # temp = select_card_identifiers(con,card_info['id'])
+                    # print(f"TEMPPPP: {}")
+
+                    try:
+                        print("TESTTTTTt ======== ", card_info['data'][0]['id'])
+                    except Exception:
+                        print(card_info)
+
         # time.sleep(1)
 end_time = time.time()
 elapsed_time = end_time - start_time

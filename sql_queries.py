@@ -100,6 +100,15 @@ def get_card_info(set_code, collector_number):
         return None
 
 
+def select_card_identifiers(conn):
+    # Connect to the database
+    conn.execute("SELECT scryfallId, uuid FROM cardIdentifiers WHERE x = ?", (x,))
+    # Fetch the results
+    rows = conn.fetchall()
+    # Close the connection
+    conn.close()
+
+    return rows
 
 def search_cards(conn, pattern):
     cursor = conn.cursor()
