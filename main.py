@@ -93,7 +93,10 @@ def image_check_full_image(filename):
 
 
 def image_search_bottom(filename):
-    img = Image.open(os.path.join(image_dir, filename))
+    try:
+        img = Image.open(os.path.join(image_dir, filename))
+    except Exception:
+        return False
     width, height = img.size
 
     # Define the region of interest (bottom 20% of the image)
@@ -121,10 +124,12 @@ def image_search_bottom(filename):
 counter_succ = 0
 counter_fail = 0
 api_id = ""
-for filename in tqdm(files):
+for filename in tqdm(files, position=0):
     if filename.endswith('.jpg') or filename.endswith('.png'):
         # text = image_check_full_image(filename)
         text = image_search_bottom(filename)
+        if not text:
+            pass
         print("=============== \n",
               Fore.BLACK, filename, Fore.RESET)
         present_setCode = check_words_in_string(unique_set_codes, text)
