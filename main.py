@@ -3,7 +3,7 @@ import sqlite3
 import time
 from pprint import pprint
 
-from sql_queries import connect_to_database, get_unique_set_codes, get_card_info, select_card_identifiers
+from sql_queries import connect_to_database, get_unique_set_codes, get_card_info, search_cards_by_scryfall_id
 from configs import *
 import cv2
 from colorama import Fore, Back, Style
@@ -111,7 +111,9 @@ def image_search_bottom(filename):
     return text
 
 
-counter = 0
+counter_succ = 0
+counter_fail = 0
+api_id = ""
 for filename in files:
     if filename.endswith('.jpg') or filename.endswith('.png'):
         # text = image_check_full_image(filename)
@@ -121,25 +123,37 @@ for filename in files:
         present_setCode = check_words_in_string(unique_set_codes, text)
         # present_words = check_words_in_string(card_type_words, text)
         present_card_max_num = extract_info(text)
-        print(Fore.GREEN, text, Fore.RESET)
+        #print(Fore.GREEN, text, Fore.RESET)
         # print(Fore.BLUE, present_setCode, Fore.CYAN, present_card_max_num, Fore.RESET)
-        counter = counter + 1
         if len(present_card_max_num) > 0 and len(present_setCode) > 0:
             for cardnum in present_card_max_num:
                 for setcode in present_setCode:
                     # print("look at meeee", cardnum, setcode)
                     card_info = get_card_info(setcode, cardnum[0])
 
-                    # temp = select_card_identifiers(con,card_info['id'])
-                    # print(f"TEMPPPP: {}")
-
                     try:
-                        print("TESTTTTTt ======== ", card_info['data'][0]['id'])
+                        api_id = card_info['data'][0]['id']
+                        #print("api_id")
                     except Exception:
-                        print(card_info)
+                        api_id = False
+                    print(card_info)
+                    if api_id:
+
+                        print(f"API Id Requested: {api_id}")
+                        UUID = search_cards_by_scryfall_id(con, api_id)[0]
+                        print("AAAAAAA",UUID, filename)
+                        if UUID+".jpg" == filename:
+                            counter_succ += 1
+                            print("MATCHINGGGGGGGG!!!!!!!!!!!!")
+                    else:
+                        counter_fail += 1
+
+
 
         # time.sleep(1)
 end_time = time.time()
 elapsed_time = end_time - start_time
 
 print("Elapsed time:", elapsed_time, "seconds")
+print(f"success: {counter_succ}")
+print(f"failed:  {counter_fail}")

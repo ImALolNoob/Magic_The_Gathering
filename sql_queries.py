@@ -1,6 +1,8 @@
 import sqlite3
 
 import requests
+from colorama import Fore
+
 
 def delete_later():
     temp = {'object': 'list', 'not_found': [], 'data': [{'object': 'card', 'id': '3dfb8817-ca3c-44ba-92f2-e9d6294cd25d',
@@ -100,15 +102,12 @@ def get_card_info(set_code, collector_number):
         return None
 
 
-def select_card_identifiers(conn):
-    # Connect to the database
-    conn.execute("SELECT scryfallId, uuid FROM cardIdentifiers WHERE x = ?", (x,))
-    # Fetch the results
-    rows = conn.fetchall()
-    # Close the connection
-    conn.close()
-
-    return rows
+def search_cards_by_scryfall_id(conn, scryfall_id):
+    cursor = conn.cursor()
+    query = "SELECT uuid FROM cardIdentifiers WHERE scryfallId = ?"
+    cursor.execute(query, (scryfall_id,))
+    uuid = cursor.fetchone()
+    return uuid
 
 def search_cards(conn, pattern):
     cursor = conn.cursor()
