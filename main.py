@@ -36,12 +36,10 @@ random.shuffle(files)
 
 def check_words_in_string(words, string_to_check):
     present_words = []
-    if type(words) == bool:
-        print(Fore.RED + "reeeee", Fore.RESET)
-        return present_words
-    for word in words:
-        if word.lower() in string_to_check.lower():
-            present_words.append(word)
+    if string_to_check is not None:  # Check if string_to_check is not None
+        for word in words:
+            if word.lower() in string_to_check.lower():
+                present_words.append(word)
     return present_words
 
 
