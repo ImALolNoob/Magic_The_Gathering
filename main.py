@@ -36,7 +36,7 @@ random.shuffle(files)
 
 def check_words_in_string(words, string_to_check):
     present_words = []
-    if type(words) == str:
+    if type(words) == bool:
         print(Fore.RED + "reeeee", Fore.RESET)
         return present_words
     for word in words:
