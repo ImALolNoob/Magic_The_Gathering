@@ -2,5 +2,11 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../Python_Projects/ARSE-Bot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../Python_Projects/AirT" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../Python_Projects/Jacks_magic/image_detection/customfont/tessdata_best" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../Python_Projects/MCS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../Python_Projects/Payserverwebsite" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../Python_Projects/randoms/AutoGPT" vcs="Git" />
   </component>
 </project>

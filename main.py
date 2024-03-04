@@ -15,21 +15,13 @@ import pytesseract
 import os
 from tqdm import tqdm
 
+from sys import platform
 
-
-print(os)
-if os.name == 'Windows':
-    print("Hello Microsoft")
+if platform == "linux" or platform == "linux2":
+    print("linux Userrrr Ayyy Legend")
+elif platform == "win32":
+    print("windows user ewwww")
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-elif os.name == 'Linux':
-    print("Potato")
-else:
-    print("Unknown operating system")
-    try:
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-    except Exception:
-        pass
-
 
 start_time = time.time()
 # If you're on Windows, you will need to point pytesseract to the path
@@ -44,6 +36,9 @@ random.shuffle(files)
 
 def check_words_in_string(words, string_to_check):
     present_words = []
+    if type(words) == str:
+        print(Fore.RED + "reeeee", Fore.RESET)
+        return present_words
     for word in words:
         if word.lower() in string_to_check.lower():
             present_words.append(word)
@@ -145,7 +140,7 @@ for filename in tqdm(files, position=0):
         present_setCode = check_words_in_string(unique_set_codes, text)
         # present_words = check_words_in_string(card_type_words, text)
         present_card_max_num = extract_info(text)
-        #print(Fore.GREEN, text, Fore.RESET)
+        # print(Fore.GREEN, text, Fore.RESET)
         # print(Fore.BLUE, present_setCode, Fore.CYAN, present_card_max_num, Fore.RESET)
         if len(present_card_max_num) > 0 and len(present_setCode) > 0:
             for cardnum in present_card_max_num:
@@ -155,22 +150,20 @@ for filename in tqdm(files, position=0):
 
                     try:
                         api_id = card_info['data'][0]['id']
-                        #print("api_id")
+                        # print("api_id")
                     except Exception:
                         api_id = False
-                    #print(card_info)
+                    # print(card_info)
                     if api_id:
 
-                        #print(f"API Id Requested: {api_id}")
+                        # print(f"API Id Requested: {api_id}")
                         UUID = search_cards_by_scryfall_id(con, api_id)[0]
-                        print("AAAAAAA",UUID, filename)
-                        if UUID+".jpg" == filename:
+                        print("AAAAAAA", UUID, filename)
+                        if UUID + ".jpg" == filename:
                             counter_succ += 1
                             print("MATCHINGGGGGGGG!!!!!!!!!!!!")
                     else:
                         counter_fail += 1
-
-
 
         # time.sleep(1)
 end_time = time.time()
