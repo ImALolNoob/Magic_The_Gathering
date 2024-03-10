@@ -118,10 +118,19 @@ def image_search_bottom(filename):
 
     # Perform OCR only on the region of interest
     roi = img.crop((roi_left, roi_top, roi_right, roi_bottom))
-    text = pytesseract.image_to_string(roi)
-    # print("-+-+-",Fore.LIGHTCYAN_EX, text,Fore.RESET)
+    ret_text = pytesseract.image_to_string(roi)
+
+    # Remove "EN.*" in a line, where "EN" comes after a space (first space is after the set code)
+    # regex:
+    # - positive lookahead (?=) matches _after_ this group (so set code isn't deleted)
+    # - \s matches space
+    # - .* before EN as there may be trash characters picked up between the set code and "EN"
+    # NOTE: Not fully accurate but thus far has not removed successful cases
+    ret_text = re.sub(r"(?=\s).*EN.*", "", ret_text)
+
+    # print("-+-+-",Fore.LIGHTCYAN_EX, ret_text,Fore.RESET)
     # roi.show()
-    return text
+    return ret_text
 
 
 counter_succ = 0
