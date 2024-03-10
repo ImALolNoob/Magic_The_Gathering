@@ -72,10 +72,12 @@ def delete_later():
 
 
 def connect_to_database():
+    """Connect to SQLite DB"""
     conn = sqlite3.connect('AllPrintings.sqlite')
     return conn
 
 def get_card_info(set_code, collector_number):
+    """Get card info via API request"""
     print(f"API REQUESTING {type(set_code), set_code, type(collector_number), collector_number}")
     url = "https://api.scryfall.com/cards/collection"
 
@@ -96,10 +98,9 @@ def get_card_info(set_code, collector_number):
     if response.status_code == 200:
         # Return the response JSON
         return response.json()
-    else:
-        # Return None if there's an error
-        print("Error:", response.status_code)
-        return None
+    # Return None if there's an error
+    print("Error:", response.status_code)
+    return None
 
 
 def search_cards_by_scryfall_id(conn, scryfall_id):
@@ -110,6 +111,7 @@ def search_cards_by_scryfall_id(conn, scryfall_id):
     return uuid
 
 def search_cards(conn, pattern):
+    """Find cards where the pattern exists in one of multiple fields"""
     cursor = conn.cursor()
     query = """SELECT artistIds, name, flavorText, text 
                FROM cards
