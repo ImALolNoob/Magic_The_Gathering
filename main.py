@@ -1,40 +1,40 @@
+import os
 import re
-import sqlite3
 import time
+import random
+from sys import platform
 from pprint import pprint
+from typing import List
+
+# import cv2
+import pytesseract
+from PIL import Image, ImageDraw
+from colorama import Fore, Back, Style
+from tqdm import tqdm
 
 from sql_queries import connect_to_database, get_unique_set_codes, get_card_info, search_cards_by_scryfall_id
 from configs import *
-import cv2
-from colorama import Fore, Back, Style
 
 print(Fore.RED + Back.GREEN + 'Hello, World!' + Style.RESET_ALL)
-import random
-from PIL import Image, ImageDraw
-import pytesseract
-import os
-from tqdm import tqdm
 
-from sys import platform
-
-if platform == "linux" or platform == "linux2":
+if platform in ("linux", "linux2"):
     print("linux Userrrr Ayyy Legend")
 elif platform == "win32":
     print("windows user ewwww")
+    # NOTE: If you're on Windows, you will need to point pytesseract to the path
+    # where you installed Tesseract
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 start_time = time.time()
-# If you're on Windows, you will need to point pytesseract to the path
-# where you installed Tesseract
-
 
 # Specify the directory containing images
-image_dir = 'images'
-files = os.listdir(image_dir)
+IMAGE_DIR = 'images'
+files = os.listdir(IMAGE_DIR)
 random.shuffle(files)
 
 
-def check_words_in_string(words, string_to_check):
+def check_words_in_string(words: List[str], string_to_check: str):
+    """Return any `words` that exist in `string_to_check` (not case sensitive)"""
     present_words = []
     if string_to_check is not None:  # Check if string_to_check is not None
         for word in words:
@@ -43,9 +43,10 @@ def check_words_in_string(words, string_to_check):
     return present_words
 
 
-def extract_info(text):
+def extract_info(p_text: str) -> List[str]:
+    """Extract useful data out of the text of the card"""
     # Split the text into lines
-    matches = []
+    matches: List[str] = []
     patterns = [
         r'(\d+)/(\d+)\s+([A-Za-z])',  # 11/11 U
         r'([A-Za-z])\s+(\d+)\/(\d+)',  # U 11/11
@@ -53,9 +54,9 @@ def extract_info(text):
 
     ]
 
-    lines = text.split('\n')
+    lines = p_text.split('\n')
 
-    results = []
+    results: List[str] = []
 
     for line in lines:
         for pattern in patterns:
@@ -73,8 +74,9 @@ print(unique_set_codes)
 
 # Iterate through all files in the shuffled list
 
-def image_check_full_image(filename):
-    img = Image.open(os.path.join(image_dir, filename))
+def image_check_full_image(p_filename: str):
+    """Get all text from the whole image"""
+    img = Image.open(os.path.join(IMAGE_DIR, p_filename))
     width, height = img.size
     text_boxes = pytesseract.image_to_boxes(img)
 
@@ -95,9 +97,10 @@ def image_check_full_image(filename):
     return fullimagetext
 
 
-def image_search_bottom(filename):
+def image_search_bottom(p_filename: str) -> str:
+    """Get text from the bottom of the image"""
     try:
-        img = Image.open(os.path.join(image_dir, filename))
+        img = Image.open(os.path.join(IMAGE_DIR, p_filename))
     except Exception:
         return False
     width, height = img.size
@@ -147,11 +150,16 @@ for filename in tqdm(files, position=0):
         present_setCode = check_words_in_string(unique_set_codes, text)
         # present_words = check_words_in_string(card_type_words, text)
         present_card_max_num = extract_info(text)
-        # print(Fore.GREEN, text, Fore.RESET)
+        print(Fore.GREEN, text, Fore.RESET)
         # print(Fore.BLUE, present_setCode, Fore.CYAN, present_card_max_num, Fore.RESET)
+        # print("----------")
+        # print("filename: ", filename)
+        # print(present_card_max_num, present_setCode)
         if len(present_card_max_num) > 0 and len(present_setCode) > 0:
             for cardnum in present_card_max_num:
+                # print("cardnum: ", cardnum)
                 for setcode in present_setCode:
+                    # print("setcode: ", setcode)
                     # print("look at meeee", cardnum, setcode)
                     card_info = get_card_info(setcode, cardnum[0])
 
