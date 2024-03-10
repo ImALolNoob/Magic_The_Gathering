@@ -16,3 +16,5 @@ Install dependencies manually via:
 If you are using pylint on Linux, and it's not using modules from your venv, execute the following in terminal:
 - export PYTHONPATH=$PYTHONPATH:/dir-to-your-project/.venv/lib64/python3.11/site-packages/`
 
+<!-- test ci/cd pylint -->
+
